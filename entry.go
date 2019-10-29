@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/yamajik/vscode/launcher"
+	"github.com/yamajik/codeon/launcher"
 )
 
 func main() {

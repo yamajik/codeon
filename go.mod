@@ -1,4 +1,4 @@
-module github.com/yamajik/vscode
+module github.com/yamajik/codeon
 
 go 1.13
 
