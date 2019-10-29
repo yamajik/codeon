@@ -1,7 +1,7 @@
 package launcher
 
 import (
-	"github.com/yamajik/codeon/launcher/ssh"
+	"github.com/yamajik/codeon/ssh"
 )
 
 // VscodeSSHLauncher bulabula
