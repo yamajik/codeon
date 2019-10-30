@@ -31,7 +31,7 @@ var rootCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		url := args[0]
-		re := regexp.MustCompile(`codeon\+(\w+):(\w+)`)
+		re := regexp.MustCompile(`codeon:(\w+)/(\w+)`)
 		match := re.FindStringSubmatch(url)
 		if len(match) != 3 {
 			panic(fmt.Errorf("invalid url specified: %s", url))
