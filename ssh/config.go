@@ -3,6 +3,7 @@ package ssh
 import (
 	"io/ioutil"
 	"os"
+	"os/user"
 	"path/filepath"
 	"strings"
 
@@ -16,8 +17,13 @@ type Config struct {
 }
 
 // UserConfigFile bulabula
-func UserConfigFile() string {
-	return filepath.Join(os.Getenv("HOME"), ".ssh", "config")
+func UserConfigFile() (file string, err error) {
+	user, err := user.Current()
+	if err != nil {
+		return
+	}
+	file = filepath.Join(user.HomeDir, ".ssh", "config")
+	return
 }
 
 // LoadConfig bulabula
@@ -52,7 +58,11 @@ func LoadConfig(file string) (cfg *Config, err error) {
 
 // LoadUserConfig bulabula
 func LoadUserConfig() (cfg *Config, err error) {
-	return LoadConfig(UserConfigFile())
+	file, err := UserConfigFile()
+	if err != nil {
+		return
+	}
+	return LoadConfig(file)
 }
 
 // SaveConfig bulabula
@@ -62,7 +72,11 @@ func SaveConfig(file string, config *Config) (err error) {
 
 // SaveUserConfig bulabula
 func SaveUserConfig(config *Config) (err error) {
-	return SaveConfig(UserConfigFile(), config)
+	file, err := UserConfigFile()
+	if err != nil {
+		return
+	}
+	return SaveConfig(file, config)
 }
 
 // String bulabula
