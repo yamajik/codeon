@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"regexp"
-	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/yamajik/codeon/launcher"
@@ -32,12 +31,12 @@ var rootCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		url := args[0]
-		re := regexp.MustCompile(`(?m)codeon://(\w+)/(\w+)`)
-		if !re.MatchString(url) {
+		re := regexp.MustCompile(`codeon\+(\w+):(\w+)`)
+		match := re.FindStringSubmatch(url)
+		if len(match) != 3 {
 			panic(fmt.Errorf("invalid url specified: %s", url))
 		}
-		urlArgs := strings.Split(url[9:], "/")
-		codeonType, codeonConfigBase64 := urlArgs[0], urlArgs[1]
+		codeonType, codeonConfigBase64 := match[1], match[2]
 		switch codeonType {
 		case "ssh":
 			{
