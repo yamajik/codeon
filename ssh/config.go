@@ -12,8 +12,7 @@ import (
 
 // Config bulabula
 type Config struct {
-	config *ssh_config.Config
-	Hosts  []*Host
+	Hosts []*Host
 }
 
 // UserConfigFile bulabula
@@ -50,9 +49,20 @@ func LoadConfig(file string) (cfg *Config, err error) {
 	}
 
 	cfg = &Config{
-		config: config,
-		Hosts:  hosts,
+		Hosts: hosts,
 	}
+	if !cfg.HasDefaultHost() {
+		err = cfg.AddDefaultHost()
+	}
+	return
+}
+
+// NewConfig bulabula
+func NewConfig() (cfg *Config, err error) {
+	cfg = &Config{
+		Hosts: []*Host{},
+	}
+	err = cfg.AddDefaultHost()
 	return
 }
 
@@ -144,5 +154,20 @@ func (c *Config) AddHostsFromJSON(jsonString string) (err error) {
 			return
 		}
 	}
+	return
+}
+
+// HasDefaultHost bulabula
+func (c *Config) HasDefaultHost() bool {
+	return c.FindHost("*") != nil
+}
+
+// AddDefaultHost bulabula
+func (c *Config) AddDefaultHost() (err error) {
+	defaultHost, err := NewDefaultHost()
+	if err != nil {
+		return
+	}
+	c.Hosts = append([]*Host{defaultHost}, c.Hosts...)
 	return
 }

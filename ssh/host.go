@@ -80,6 +80,11 @@ func NewHost(patterns []string, mappings map[string]string) (h *Host, err error)
 	return
 }
 
+// NewDefaultHost bulabula
+func NewDefaultHost() (h *Host, err error) {
+	return NewHost([]string{"*"}, map[string]string{})
+}
+
 // HostJSONStruct bulabula
 type HostJSONStruct struct {
 	Patterns []string
