@@ -12,6 +12,6 @@ git flow release start ${VERSION}
 git flow release finish -m "${VERSION}" ${VERSION}
 git push --all
 
-goreleaser
+goreleaser --rm-dist
 
 git checkout develop
