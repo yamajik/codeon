@@ -1,0 +1,28 @@
+{
+  "host": "shanglu-10368-d64f75e0f53e11e991d41d269e8e5935",
+  "path": "/code",
+  "additionHosts": [
+      {
+          "patterns": [
+              "suanpan-ssh-proxy"
+          ],
+          "mappings": {
+              "HostName": "39.96.195.251",
+              "User": "suanpan",
+              "Port": "31022"
+          }
+      },
+      {
+          "patterns": [
+              "shanglu-10368-d64f75e0f53e11e991d41d269e8e5935"
+          ],
+          "mappings": {
+              "HostName": "app-10368-d64f75e0f53e11e991d41d269e8e5935.user-shanglu",
+
+              "User": "root",
+              "Port": "22",
+              "ProxyJump": "suanpan-ssh-proxy"
+          }
+      }
+  ]
+}
