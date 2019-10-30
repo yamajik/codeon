@@ -23,7 +23,11 @@ func main() {
 	host, path := os.Args[2], os.Args[3]
 	sshCmd.Parse(os.Args[4:])
 
-	err := launcher.NewVscodeSSHLauncher().CodeProgram(*codePath).SSHProgram(*sshPath).SSHConfigFile(*sshConfigFile).Launch(host, path, *sshHosts)
+	l, err := launcher.NewVscodeSSHLauncher()
+	if err != nil {
+		panic(err)
+	}
+	err = l.CodeProgram(*codePath).SSHProgram(*sshPath).SSHConfigFile(*sshConfigFile).Launch(host, path, *sshHosts)
 	if err != nil {
 		panic(err)
 	}

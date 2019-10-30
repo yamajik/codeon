@@ -12,12 +12,17 @@ type VscodeSSHLauncher struct {
 }
 
 // NewVscodeSSHLauncher bulabula
-func NewVscodeSSHLauncher() *VscodeSSHLauncher {
-	return &VscodeSSHLauncher{
+func NewVscodeSSHLauncher() (l *VscodeSSHLauncher, err error) {
+	sshConfigFile, err := ssh.UserConfigFile()
+	if err != nil {
+		return
+	}
+	l = &VscodeSSHLauncher{
 		VscodeLauncher: VscodeLauncher{codeProgram: "code"},
 		sshProgram:     "ssh",
-		sshConfigFile:  ssh.UserConfigFile(),
+		sshConfigFile:  sshConfigFile,
 	}
+	return
 }
 
 // CodeProgram bulabula
