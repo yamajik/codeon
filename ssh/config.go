@@ -142,21 +142,6 @@ func (c *Config) AddHost(host *Host) (err error) {
 	return
 }
 
-// AddHostsFromJSON bulabula
-func (c *Config) AddHostsFromJSON(jsonString string) (err error) {
-	hosts, err := LoadHostsFromJSON(jsonString)
-	if err != nil {
-		return
-	}
-	for _, host := range hosts {
-		err = c.AddHost(host)
-		if err != nil {
-			return
-		}
-	}
-	return
-}
-
 // HasDefaultHost bulabula
 func (c *Config) HasDefaultHost() bool {
 	return c.FindHost("*") != nil

@@ -7,8 +7,10 @@ import (
 // VscodeSSHLauncher bulabula
 type VscodeSSHLauncher struct {
 	VscodeLauncher
-	sshProgram    string
-	sshConfigFile string
+	sshProgram       string
+	sshConfigFile    string
+	sshConfig        *ssh.Config
+	sshAdditionHosts []*ssh.Host
 }
 
 // NewVscodeSSHLauncher bulabula
@@ -49,14 +51,20 @@ func (l *VscodeSSHLauncher) SSHConfigFile(sshConfigFile string) *VscodeSSHLaunch
 	return l
 }
 
+// SSHAdditionHosts bulabula
+func (l *VscodeSSHLauncher) SSHAdditionHosts(sshAdditionHosts []*ssh.Host) *VscodeSSHLauncher {
+	l.sshAdditionHosts = append(l.sshAdditionHosts, sshAdditionHosts...)
+	return l
+}
+
 // Launch bulabula
-func (l *VscodeSSHLauncher) Launch(host string, folder string, hostsJSONString string) (err error) {
+func (l *VscodeSSHLauncher) Launch(host string, folder string) (err error) {
 	config, err := ssh.LoadUserConfig()
 	if err != nil {
 		return
 	}
-	if hostsJSONString != "" {
-		err = config.AddHostsFromJSON(hostsJSONString)
+	for _, h := range l.sshAdditionHosts {
+		err = config.AddHost(h)
 		if err != nil {
 			return
 		}

@@ -91,24 +91,13 @@ type HostJSONStruct struct {
 	Mappings map[string]string
 }
 
-// LoadHostFromJSON bulabula
-func LoadHostFromJSON(jsonString string) (host *Host, err error) {
-	hostStruct := HostJSONStruct{}
-	err = json.Unmarshal([]byte(jsonString), &hostStruct)
-	if err != nil {
-		return
-	}
-	host, err = NewHost(hostStruct.Patterns, hostStruct.Mappings)
-	return
+// LoadHostFromStruct bulabula
+func LoadHostFromStruct(hostStruct HostJSONStruct) (host *Host, err error) {
+	return NewHost(hostStruct.Patterns, hostStruct.Mappings)
 }
 
-// LoadHostsFromJSON bulabula
-func LoadHostsFromJSON(jsonString string) (hosts []*Host, err error) {
-	hostStructs := []HostJSONStruct{}
-	err = json.Unmarshal([]byte(jsonString), &hostStructs)
-	if err != nil {
-		return
-	}
+// LoadHostsFromStruct bulabula
+func LoadHostsFromStruct(hostStructs []HostJSONStruct) (hosts []*Host, err error) {
 	for _, hostStruct := range hostStructs {
 		host, newHostErr := NewHost(hostStruct.Patterns, hostStruct.Mappings)
 		if newHostErr != nil {
@@ -118,6 +107,26 @@ func LoadHostsFromJSON(jsonString string) (hosts []*Host, err error) {
 		hosts = append(hosts, host)
 	}
 	return
+}
+
+// LoadHostFromJSON bulabula
+func LoadHostFromJSON(jsonString string) (host *Host, err error) {
+	hostStruct := HostJSONStruct{}
+	err = json.Unmarshal([]byte(jsonString), &hostStruct)
+	if err != nil {
+		return
+	}
+	return LoadHostFromStruct(hostStruct)
+}
+
+// LoadHostsFromJSON bulabula
+func LoadHostsFromJSON(jsonString string) (hosts []*Host, err error) {
+	hostStructs := []HostJSONStruct{}
+	err = json.Unmarshal([]byte(jsonString), &hostStructs)
+	if err != nil {
+		return
+	}
+	return LoadHostsFromStruct(hostStructs)
 }
 
 // String bulabula
