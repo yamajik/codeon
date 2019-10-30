@@ -4,6 +4,9 @@ import (
 	"bytes"
 	"fmt"
 	"os/exec"
+	"os/user"
+	"path/filepath"
+	"runtime"
 )
 
 // VscodeLauncher bulabula
@@ -11,9 +14,33 @@ type VscodeLauncher struct {
 	codeProgram string
 }
 
+// DefaultCodeProgram bulabula
+func DefaultCodeProgram() (codeProgram string, err error) {
+	switch runtime.GOOS {
+	case "darwin":
+	case "linux":
+		codeProgram = filepath.Join("/", "usr", "local", "bin", "code")
+	case "windows":
+		user, getCurrentUserErr := user.Current()
+		if getCurrentUserErr != nil {
+			err = getCurrentUserErr
+			return
+		}
+		codeProgram = filepath.Join(user.HomeDir, "AppData", "Local", "Programs", "Microsoft VS Code", "bin", "code")
+	default:
+		codeProgram = "ssh"
+	}
+	return
+}
+
 // NewVscodeLauncher bulabula
-func NewVscodeLauncher() *VscodeLauncher {
-	return &VscodeLauncher{codeProgram: "code"}
+func NewVscodeLauncher() (l *VscodeLauncher, err error) {
+	codeProgram, err := DefaultCodeProgram()
+	if err != nil {
+		return
+	}
+	l = &VscodeLauncher{codeProgram: codeProgram}
+	return
 }
 
 // CodeProgram bulabula

@@ -1,6 +1,9 @@
 package launcher
 
 import (
+	"path/filepath"
+	"runtime"
+
 	"github.com/yamajik/codeon/ssh"
 )
 
@@ -13,15 +16,32 @@ type VscodeSSHLauncher struct {
 	sshAdditionHosts []*ssh.Host
 }
 
+// DefaultSSHProgram bulabula
+func DefaultSSHProgram() (sshProgram string) {
+	switch runtime.GOOS {
+	case "darwin":
+	case "linux":
+		sshProgram = filepath.Join("/", "usr", "bin", "ssh")
+	case "windows":
+	default:
+		sshProgram = "ssh"
+	}
+	return
+}
+
 // NewVscodeSSHLauncher bulabula
 func NewVscodeSSHLauncher() (l *VscodeSSHLauncher, err error) {
+	codeProgram, err := DefaultCodeProgram()
+	if err != nil {
+		return
+	}
 	sshConfigFile, err := ssh.UserConfigFile()
 	if err != nil {
 		return
 	}
 	l = &VscodeSSHLauncher{
-		VscodeLauncher: VscodeLauncher{codeProgram: "code"},
-		sshProgram:     "ssh",
+		VscodeLauncher: VscodeLauncher{codeProgram: codeProgram},
+		sshProgram:     DefaultSSHProgram(),
 		sshConfigFile:  sshConfigFile,
 	}
 	return
