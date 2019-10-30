@@ -21,6 +21,8 @@ func DefaultSSHProgram() (sshProgram string) {
 	switch runtime.GOOS {
 	case "darwin", "linux":
 		sshProgram = filepath.Join("/", "usr", "bin", "ssh")
+	case "windows":
+		sshProgram = filepath.Join("C:", "Windows", "System32", "OpenSSH")
 	default:
 		sshProgram = "ssh"
 	}
