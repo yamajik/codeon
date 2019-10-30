@@ -19,10 +19,8 @@ type VscodeSSHLauncher struct {
 // DefaultSSHProgram bulabula
 func DefaultSSHProgram() (sshProgram string) {
 	switch runtime.GOOS {
-	case "darwin":
-	case "linux":
+	case "darwin", "linux":
 		sshProgram = filepath.Join("/", "usr", "bin", "ssh")
-	case "windows":
 	default:
 		sshProgram = "ssh"
 	}

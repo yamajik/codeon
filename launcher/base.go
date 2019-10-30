@@ -17,8 +17,7 @@ type VscodeLauncher struct {
 // DefaultCodeProgram bulabula
 func DefaultCodeProgram() (codeProgram string, err error) {
 	switch runtime.GOOS {
-	case "darwin":
-	case "linux":
+	case "darwin", "linux":
 		codeProgram = filepath.Join("/", "usr", "local", "bin", "code")
 	case "windows":
 		user, getCurrentUserErr := user.Current()
@@ -60,6 +59,7 @@ func (l *VscodeLauncher) Launch() (err error) {
 // Exec bulabula
 func (l *VscodeLauncher) Exec(args ...string) (err error) {
 	cmd := exec.Command(l.codeProgram, args...)
+	fmt.Println(cmd)
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
