@@ -21,4 +21,4 @@ case $1 in
         ;;
 esac
 
-. tools/publish.sh ${MAJOR}.${MINOR}.${MICRO}
+. tools/release.sh ${MAJOR}.${MINOR}.${MICRO}
