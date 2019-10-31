@@ -1,10 +1,13 @@
 package launcher
 
 import (
+	"fmt"
+	"os"
 	"path/filepath"
 	"runtime"
 
 	"github.com/yamajik/codeon/ssh"
+	"github.com/yamajik/codeon/utils"
 )
 
 // VscodeSSHLauncher bulabula
@@ -25,6 +28,21 @@ func DefaultSSHProgram() (sshProgram string) {
 		sshProgram = filepath.Join("C:", "Windows", "System32", "OpenSSH")
 	default:
 		sshProgram = "ssh"
+	}
+	return
+}
+
+// ValidateSSHProgram bulabula
+func ValidateSSHProgram(sshProgram string) (err error) {
+	if sshProgram == "ssh" {
+		return utils.Exec(sshProgram, "-V")
+	}
+	stat, err := os.Stat(sshProgram)
+	if err != nil {
+		return
+	}
+	if stat.IsDir() {
+		err = fmt.Errorf("Program is a directory: %s", sshProgram)
 	}
 	return
 }
@@ -79,6 +97,10 @@ func (l *VscodeSSHLauncher) SSHAdditionHosts(sshAdditionHosts []*ssh.Host) *Vsco
 
 // Launch bulabula
 func (l *VscodeSSHLauncher) Launch(host string, folder string) (err error) {
+	err = l.Validate()
+	if err != nil {
+		return
+	}
 	config, err := ssh.LoadUserConfig()
 	if err != nil {
 		return
@@ -94,4 +116,13 @@ func (l *VscodeSSHLauncher) Launch(host string, folder string) (err error) {
 		return
 	}
 	return l.Exec("--remote", "ssh-remote+"+host, folder)
+}
+
+// Validate bulabula
+func (l *VscodeSSHLauncher) Validate() (err error) {
+	err = ValidateCodeProgram(l.codeProgram)
+	if err != nil {
+		return
+	}
+	return ValidateSSHProgram(l.sshProgram)
 }

@@ -1,12 +1,13 @@
 package launcher
 
 import (
-	"bytes"
 	"fmt"
-	"os/exec"
+	"os"
 	"os/user"
 	"path/filepath"
 	"runtime"
+
+	"github.com/yamajik/codeon/utils"
 )
 
 // VscodeLauncher bulabula
@@ -27,7 +28,22 @@ func DefaultCodeProgram() (codeProgram string, err error) {
 		}
 		codeProgram = filepath.Join(user.HomeDir, "AppData", "Local", "Programs", "Microsoft VS Code", "bin", "code")
 	default:
-		codeProgram = "ssh"
+		codeProgram = "code"
+	}
+	return
+}
+
+// ValidateCodeProgram bulabula
+func ValidateCodeProgram(codeProgram string) (err error) {
+	if codeProgram == "code" {
+		return utils.Exec(codeProgram, "--version")
+	}
+	stat, err := os.Stat(codeProgram)
+	if err != nil {
+		return
+	}
+	if stat.IsDir() {
+		err = fmt.Errorf("Program is a directory: %s", codeProgram)
 	}
 	return
 }
@@ -52,16 +68,19 @@ func (l *VscodeLauncher) CodeProgram(codeProgram string) *VscodeLauncher {
 
 // Launch bulabula
 func (l *VscodeLauncher) Launch() (err error) {
-	fmt.Println("Vscode launch.")
-	return
+	err = l.Validate()
+	if err != nil {
+		return
+	}
+	return l.Exec()
 }
 
 // Exec bulabula
 func (l *VscodeLauncher) Exec(args ...string) (err error) {
-	cmd := exec.Command(l.codeProgram, args...)
-	fmt.Println(cmd)
-	var stdout, stderr bytes.Buffer
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-	return cmd.Run()
+	return utils.Exec(l.codeProgram, args...)
+}
+
+// Validate bulabula
+func (l *VscodeLauncher) Validate() (err error) {
+	return ValidateCodeProgram(l.codeProgram)
 }
